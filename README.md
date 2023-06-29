@@ -49,8 +49,6 @@ to adjust weather patterns you need to modify nextWeatherStage() in `server/serv
 
 `/weather [type]` - Set weather
 
-`/blackout` - Toggle blackout
-
 `/morning` - Set time to 9am
 
 `/noon` - Set time to 12pm
@@ -99,18 +97,6 @@ const success = global.exports["qb-weathersync"].setTime(15, 30); // 3:30PM
 ```
 
 
-### setBlackout (true|false)
-Sets or toggles blackout state and returns the state
-```lua
--- LUA EXAMPLE
-local newStatus = exports["qb-weathersync"]:setBlackout(); -- Toggle
-```
-```js
-// JAVASCRIPT EXAMPLE
-const newStatus = global.exports["qb-weathersync"].setBlackout(true); // Enable
-```
-
-
 ### setTimeFreeze (true|false)
 Sets or toggles time freeze state and returns the state
 ```lua
@@ -132,18 +118,6 @@ local newStatus = exports["qb-weathersync"]:setDynamicWeather(); -- Toggle
 ```js
 // JAVASCRIPT EXAMPLE
 const newStatus = global.exports["qb-weathersync"].setDynamicWeather(true); // Enable
-```
-
-
-### getBlackoutState
-Returns if blackout is enabled or disabled
-```lua
--- LUA EXAMPLE
-local state = exports["qb-weathersync"]:getBlackoutState();
-```
-```js
-// JAVASCRIPT EXAMPLE
-const state = global.exports["qb-weathersync"].getBlackoutState();
 ```
 
 
@@ -191,8 +165,6 @@ const state = global.exports["qb-weathersync"].getDynamicWeather();
 `qb-weathersync:server:setWeather` [type] - Set Weather type (List in Config)
 
 `qb-weathersync:server:setTime` [hour] (minute) - Set simulated time
-
-`qb-weathersync:server:toggleBlackout` (true|false) - Enable, disable or toggle blackout
 
 `qb-weathersync:server:toggleFreezeTime` (true|false) (minute) - Enable, disable or toggle time progression
 
