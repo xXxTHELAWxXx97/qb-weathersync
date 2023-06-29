@@ -3,7 +3,6 @@ local CurrentWeather = Config.StartWeather
 local baseTime = Config.BaseTime
 local timeOffset = Config.TimeOffset
 local freezeTime = Config.FreezeTime
-local blackout = Config.Blackout
 local newWeatherTimer = Config.NewWeatherTimer
 
 --- Is the source a client or the server
@@ -93,17 +92,6 @@ local function setTime(hour, minute)
     return true
 end
 
---- Sets or toggles blackout state and returns the state
---- @param state boolean `optional` - enable blackout?
---- @return boolean - blackout state
-local function setBlackout(state)
-    if state == nil then state = not blackout end
-    if state then blackout = true
-    else blackout = false end
-    TriggerEvent('qb-weathersync:server:RequestStateSync')
-    return blackout
-end
-
 --- Sets or toggles time freeze state and returns the state
 --- @param state boolean `optional` - Enable time freeze?
 --- @return boolean - Time freeze state
@@ -128,7 +116,7 @@ end
 
 -- EVENTS
 RegisterNetEvent('qb-weathersync:server:RequestStateSync', function()
-    TriggerClientEvent('qb-weathersync:client:SyncWeather', -1, CurrentWeather, blackout)
+    TriggerClientEvent('qb-weathersync:client:SyncWeather', -1, CurrentWeather)
     TriggerClientEvent('qb-weathersync:client:SyncTime', -1, baseTime, timeOffset, freezeTime)
 end)
 
@@ -151,18 +139,6 @@ RegisterNetEvent('qb-weathersync:server:setTime', function(hour, minute)
         if src > 0 then
             if (success) then TriggerClientEvent('QBCore:Notify', src, Lang:t('time.change', {value = hour, value2 = minute or "00"}))
             else TriggerClientEvent('QBCore:Notify', src, Lang:t('time.invalid'))
-            end
-        end
-    end
-end)
-
-RegisterNetEvent('qb-weathersync:server:toggleBlackout', function(state)
-    local src = getSource(source)
-    if isAllowedToChange(src) then
-        local newstate = setBlackout(state)
-        if src > 0 then
-            if (newstate) then TriggerClientEvent('QBCore:Notify', src, Lang:t('blackout.enabled'))
-            else TriggerClientEvent('QBCore:Notify', src, Lang:t('blackout.disabled'))
             end
         end
     end
@@ -223,16 +199,6 @@ QBCore.Commands.Add('weather', Lang:t('help.weathercommand'), {{name = Lang:t('h
     return print(Lang:t('weather.invalid'))
 end, 'admin')
 
-QBCore.Commands.Add('blackout', Lang:t('help.blackoutcommand'), {}, false, function(source)
-    local newstate = setBlackout()
-    if source > 0 then
-        if (newstate) then return TriggerClientEvent('QBCore:Notify', source, Lang:t('blackout.enabledc')) end
-        return TriggerClientEvent('QBCore:Notify', source, Lang:t('blackout.disabledc'))
-    end
-    if (newstate) then return print(Lang:t('blackout.enabled')) end
-    return print(Lang:t('blackout.disabled'))
-end, 'admin')
-
 QBCore.Commands.Add('morning', Lang:t('help.morningcommand'), {}, false, function(source)
     setTime(9, 0)
     if source > 0 then return TriggerClientEvent('QBCore:Notify', source, Lang:t('time.morning')) end
@@ -289,7 +255,7 @@ end)
 CreateThread(function()
     while true do
         Wait(300000)
-        TriggerClientEvent('qb-weathersync:client:SyncWeather', -1, CurrentWeather, blackout)
+        TriggerClientEvent('qb-weathersync:client:SyncWeather', -1, CurrentWeather)
     end
 end)
 
@@ -310,10 +276,8 @@ end)
 exports('nextWeatherStage', nextWeatherStage)
 exports('setWeather', setWeather)
 exports('setTime', setTime)
-exports('setBlackout', setBlackout)
 exports('setTimeFreeze', setTimeFreeze)
 exports('setDynamicWeather', setDynamicWeather)
-exports('getBlackoutState', function() return blackout end)
 exports('getTimeFreezeState', function() return freezeTime end)
 exports('getWeatherState', function() return CurrentWeather end)
 exports('getDynamicWeather', function() return Config.DynamicWeather end)
