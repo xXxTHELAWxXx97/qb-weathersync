@@ -4,8 +4,6 @@ local baseTime = Config.BaseTime
 local timeOffset = Config.TimeOffset
 local timer = 0
 local freezeTime = Config.FreezeTime
-local blackout = Config.Blackout
-local blackoutVehicle = Config.BlackoutVehicle
 local disable = Config.Disabled
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
@@ -32,9 +30,8 @@ RegisterNetEvent('qb-weathersync:client:DisableSync', function()
 	end)
 end)
 
-RegisterNetEvent('qb-weathersync:client:SyncWeather', function(NewWeather, newblackout)
+RegisterNetEvent('qb-weathersync:client:SyncWeather', function(NewWeather)
     CurrentWeather = NewWeather
-    blackout = newblackout
 end)
 
 RegisterNetEvent('qb-weathersync:client:SyncTime', function(base, offset, freeze)
@@ -52,8 +49,6 @@ CreateThread(function()
                 Wait(15000)
             end
             Wait(100) -- Wait 0 seconds to prevent crashing.
-            SetArtificialLightsState(blackout)
-            SetArtificialLightsStateAffectsVehicles(blackoutVehicle)
             ClearOverrideWeather()
             ClearWeatherTypePersist()
             SetWeatherTypePersist(lastWeather)
