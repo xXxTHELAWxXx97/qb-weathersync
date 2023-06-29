@@ -1,5 +1,6 @@
 # qb-weathersync
 Synced weather and time for QB-Core Framework :sunrise:
+Special thanks to John Henry#1354 for locating the problem code and pointing us in the right direction.
 
 # License
 
